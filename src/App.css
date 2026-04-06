@@ -880,6 +880,242 @@ h1.sr-only { display: none; } /* Managed by sr-only.css, fallback here */
   transform: translateZ(5px);
 }
 
+/* ---- BATMAN EASTER EGGS ---- */
+
+/* 1. Wayne Override Mode */
+.wayne-mode {
+  background-color: #050000 !important;
+}
+.wayne-mode .accordion {
+  box-shadow: 0 0 50px rgba(150, 0, 0, 0.3);
+}
+.wayne-mode .accordion-panel {
+  border-right: 1px solid rgba(239, 68, 68, 0.15);
+}
+.wayne-mode .hari-identity-panel {
+  background-color: #050000;
+  background-image: 
+    linear-gradient(rgba(239, 68, 68, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(239, 68, 68, 0.08) 1px, transparent 1px);
+  position: relative;
+  overflow: hidden;
+}
+
+/* CRT Scanlines Layer */
+.crt-scanlines {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), 
+              linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+  background-size: 100% 3px, 3px 100%;
+  pointer-events: none;
+  z-index: 99999;
+  opacity: 0.15;
+  animation: scanlineMove 8s linear infinite;
+}
+
+@keyframes scanlineMove {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 100px; }
+}
+
+/* 2. Full-Screen AFK Batman Eyes */
+.afk-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: transparent;
+  pointer-events: none;
+  z-index: 100000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.afk-overlay.active {
+  background-color: rgba(0, 0, 0, 0.97); 
+}
+
+.afk-cowl-svg {
+  width: 85vh; /* Dramatically increased from 65vh to be truly dominating */
+  max-width: 1200px;
+  min-width: 300px;
+  opacity: 0;
+  transform: scale(1.8) translateY(40px);
+  filter: blur(30px);
+  transition: all 5s cubic-bezier(0.1, 0.9, 0.2, 1);
+}
+
+.afk-overlay.active .afk-cowl-svg {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  filter: blur(0px);
+}
+
+.afk-overlay.active .afk-eye-left,
+.afk-overlay.active .afk-eye-right {
+  animation: eyeBlink 6s ease-in-out infinite;
+  transform-origin: center center;
+}
+
+/* Stagger the right eye slightly for realism */
+.afk-overlay.active .afk-eye-right {
+  animation-delay: 0.15s;
+}
+
+@keyframes eyeBlink {
+  /* Idle glow */
+  0%   { transform: scaleY(1); opacity: 0.85; filter: url(#evil-glow); }
+  30%  { transform: scaleY(1); opacity: 1; filter: url(#evil-glow) brightness(1.5); }
+  
+  /* Narrow menacingly */
+  38%  { transform: scaleY(0.7); opacity: 1; filter: url(#evil-glow) brightness(1.8); }
+  42%  { transform: scaleY(1); opacity: 1; }
+  
+  /* BLINK — rapid close & reopen */
+  68%  { transform: scaleY(1); opacity: 0.9; }
+  70%  { transform: scaleY(0.05); opacity: 0.3; }
+  73%  { transform: scaleY(1.1); opacity: 1; filter: url(#evil-glow) brightness(2.5); }
+  78%  { transform: scaleY(1); opacity: 0.85; filter: url(#evil-glow); }
+  
+  /* Slow breathing glow */
+  100% { transform: scaleY(1); opacity: 0.85; filter: url(#evil-glow); }
+}
+
+@keyframes searchlightFlicker {
+  0% { opacity: 0.98; }
+  5% { opacity: 0.9; }
+  10% { opacity: 0.98; }
+  15% { opacity: 1; }
+  20% { opacity: 0.98; }
+  100% { opacity: 1; }
+}
+
+/* 3. Bat-Signal */
+.bat-signal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 100;
+  background: conic-gradient(from 150deg at 50% 120%, transparent 0deg, rgba(255, 255, 255, 0.15) 15deg, rgba(255, 255, 255, 0.4) 30deg, rgba(255, 255, 255, 0.15) 45deg, transparent 60deg);
+  mix-blend-mode: overlay;
+  animation: signalSweep 5s ease-in-out forwards;
+}
+
+@keyframes signalSweep {
+  0% { transform: rotate(-40deg) scale(2); opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { transform: rotate(40deg) scale(2); opacity: 0; }
+}
+
+/* 4. Quote Glitch */
+.about-quote-glitch {
+  position: relative;
+  display: inline-block;
+  cursor: crosshair;
+}
+.about-quote-glitch::before,
+.about-quote-glitch::after {
+  content: attr(data-glitch);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #3f3f46;
+  opacity: 0;
+  color: #ef4444;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-shadow: 2px 0 #00f, -2px 0 #f00;
+  pointer-events: none;
+}
+.about-quote-glitch:hover {
+  /* Keep base text visible for readability */
+  color: #fff; 
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+}
+.about-quote-glitch:hover::before,
+.about-quote-glitch:hover::after {
+  opacity: 0.5; /* Make glitch layers translucent */
+}
+
+.wayne-mode .about-quote-glitch:hover {
+  color: #ef4444;
+  text-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+}
+
+.wayne-mode .about-quote-glitch::before,
+.wayne-mode .about-quote-glitch::after {
+  text-shadow: 2px 0 #0ff, -2px 0 #f0f; /* Reduced from 4px */
+  animation-duration: 0.3s; /* Slower than 0.15s */
+}
+.about-quote-glitch:hover::before {
+  animation: glitch-anim-1 0.4s infinite linear alternate-reverse;
+}
+.about-quote-glitch:hover::after {
+  animation: glitch-anim-2 0.3s infinite linear alternate-reverse;
+}
+
+@keyframes glitch-anim-1 {
+  0% { clip-path: polygon(0 0, 100% 0, 100% 10%, 0 10%); transform: translate(2px, 0); }
+  50% { clip-path: polygon(0 40%, 100% 40%, 100% 50%, 0 50%); transform: translate(-2px, 0); }
+  100% { clip-path: polygon(0 80%, 100% 80%, 100% 100%, 0 100%); transform: translate(2px, 0); }
+}
+@keyframes glitch-anim-2 {
+  0% { clip-path: polygon(0 20%, 100% 20%, 100% 30%, 0 30%); transform: translate(-2px, 0); }
+  50% { clip-path: polygon(0 60%, 100% 60%, 100% 70%, 0 70%); transform: translate(2px, 0); }
+  100% { clip-path: polygon(0 15%, 100% 15%, 100% 25%, 0 25%); transform: translate(-2px, 0); }
+}
+
+/* --- ARCADE PHYSICS & SPOTLIGHT --- */
+.batarang-projectile {
+  position: fixed;
+  pointer-events: none;
+  z-index: 10000;
+  transform: translate(-50%, -50%);
+  animation: throwBatarang 0.35s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
+}
+
+@keyframes throwBatarang {
+  0% { transform: translate(-50vw, 50vh) rotate(0deg) scale(2); opacity: 0; }
+  30% { opacity: 1; }
+  100% { transform: translate(-50%, -50%) rotate(1080deg) scale(0.6); opacity: 0; }
+}
+
+
+
+.spotlight-mode {
+  background-color: #000 !important;
+}
+
+.bat-spotlight-svg {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9000;
+  animation: searchlightFlicker 4s infinite;
+}
+
+.bat-spotlight-shape {
+  /* Center offset updated for new Bat logo (100x60) */
+  transform: translate(calc(var(--spotlight-x) - 150px), calc(var(--spotlight-y) - 90px)) scale(3);
+  transition: transform 0.05s linear;
+}
+
+.spotlight-mode .accordion {
+  box-shadow: none;
+}
+
 /* ---- MOBILE RESPONSIVENESS ---- */
 @media screen and (max-width: 768px) {
   .accordion {

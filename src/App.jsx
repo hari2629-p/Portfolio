@@ -5,6 +5,70 @@ import './sr-only.css';
 function App() {
   const [activeIndex, setActiveIndex] = useState(null);
 
+  // Batman Easter Egg States
+  const [isWayneMode, setIsWayneMode] = useState(false);
+  const [isMouseIdle, setIsMouseIdle] = useState(false);
+  const [showBatSignal, setShowBatSignal] = useState(false);
+  const [batarangs, setBatarangs] = useState([]);
+
+  useEffect(() => {
+    console.log(`%c
+      ⠙⢷⣶⣄⡀⠀⠀⠀⠀⠀⢀⣀⣀⣀⡀⠀⢀⡀⣰⣿⡿
+⠀⣸⣿⣿⣿⣦⠀⠀⠀⠀⠀⠉⠿⠿⣿⣶⣿⣿⡿⠛⠁
+⠀⠈⠻⣿⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠈⠈⠉⠻⠁⠀⠀
+⠀⠀⢀⣿⣿⣿⣿⠀⢀⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠈⠻⣿⣿⣷⣾⣷⡾⠀⣀⣤⣶⣶⣶⣶⣤⣄⠀
+⠀⠀⠀⠀⠀⠘⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠛⠋⠑
+⠀⠀⠀⠀⠀⠀⢹⠟⠛⠉⠉⠙⠻⡟⠁⠀⠈⠁⠀⠀⠀
+   > It's not who I am underneath, but what I do that defines me.
+    `, 'color: #ef4444; font-weight: bold; font-family: monospace;');
+
+    let keyBuffer = '';
+    const handleKeyDown = (e) => {
+      keyBuffer += e.key.toLowerCase();
+      if (keyBuffer.length > 3) keyBuffer = keyBuffer.slice(-3);
+      if (keyBuffer === 'bat') {
+        setShowBatSignal(prev => !prev); // Toggles spotlight mode permanently on/off
+        keyBuffer = '';
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  useEffect(() => {
+    // Dynamic wait time: 15s for "Hari" page (null or index 5), 1 min for others
+    const waitTime = (activeIndex === null || activeIndex === 5) ? 15000 : 60000;
+    
+    let timeout = setTimeout(() => setIsMouseIdle(true), waitTime);
+    
+    const handleGlobalInteraction = () => {
+      setIsMouseIdle(false);
+      clearTimeout(timeout);
+      timeout = setTimeout(() => setIsMouseIdle(true), waitTime);
+    };
+
+    const handleMouseMove = (e) => {
+      handleGlobalInteraction();
+      // Update global coordinates for the interactive flashlight
+      document.documentElement.style.setProperty('--spotlight-x', `${e.clientX}px`);
+      document.documentElement.style.setProperty('--spotlight-y', `${e.clientY}px`);
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mousedown', handleGlobalInteraction);
+    window.addEventListener('keydown', handleGlobalInteraction);
+    window.addEventListener('touchstart', handleGlobalInteraction);
+    
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mousedown', handleGlobalInteraction);
+      window.removeEventListener('keydown', handleGlobalInteraction);
+      window.removeEventListener('touchstart', handleGlobalInteraction);
+      clearTimeout(timeout);
+    };
+  }, [activeIndex]); // Re-run when active page changes to update timer duration
+
   const projectsData = [
     {
       title: 'Completemovieexp',
@@ -273,8 +337,11 @@ function App() {
             </div>
           </div>
           
-          <div className="about-quote">
-            "Simplicity is the ultimate sophistication."
+          <div 
+            className="about-quote about-quote-glitch" 
+            data-glitch={isWayneMode ? '"I AM VENGEANCE. I AM THE NIGHT."' : '"SIMPLICITY IS THE ULTIMATE SOPHISTICATION."'}
+          >
+            {isWayneMode ? '"I AM VENGEANCE. I AM THE NIGHT."' : '"SIMPLICITY IS THE ULTIMATE SOPHISTICATION."'}
           </div>
         </div>
       )
@@ -288,7 +355,7 @@ function App() {
       bg: '#52525b',
       content: (
         <div className="panel-inner">
-          <h2>CONNECT WITH ME</h2>
+          <h2>{isWayneMode ? 'ENCRYPTED FREQUENCIES' : 'CONNECT WITH ME'}</h2>
           <div className="social-links-grid" style={{flexDirection: 'column', gap: '20px', alignItems: 'flex-start'}}>
             <a href="https://www.linkedin.com/in/harigovind-p-nair-89a4992b8/" target="_blank" rel="noreferrer" className="social-row">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
@@ -301,6 +368,16 @@ function App() {
             <a href="https://www.instagram.com/rea_lhari/" target="_blank" rel="noreferrer" className="social-row">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
               Instagram (Photography)
+            </a>
+            <a href="https://discord.com/users/806104605045686292" target="_blank" rel="noreferrer" className="social-row">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="9" cy="12" r="1"/>
+                <circle cx="15" cy="12" r="1"/>
+                <path d="M7.5 7.5c3.5-1 5.5-1 9 0"/>
+                <path d="M7 16.5c.35-1 2.35-1 5 0 2.65-1 4.65-1 5 0"/>
+                <path d="M2 14.5c.1-4 1.1-7 1.1-7l2.3-3.1h13l2.3 3.1c0 0 1 3 1.1 7-.1 3.4-3.1 4.6-3.1 4.6l-1.4-1.7"/>
+              </svg>
+              {isWayneMode ? 'MISSION_CONTROL (ID:8061)' : 'Discord'}
             </a>
             <a href="https://www.instagram.com/_h._.gp/" target="_blank" rel="noreferrer" className="social-row">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
@@ -327,13 +404,29 @@ function App() {
         >
           <div className="hari-tilt-wrapper">
             <div className="hari-name-block">
-              <div className="hari-first-name">HARIGOVIND</div>
+              <div className="hari-first-name">
+                HARIG<span 
+                  className="wayne-trigger" 
+                  onClick={(e) => { e.stopPropagation(); setIsWayneMode(prev => !prev); }}
+                  style={{ cursor: 'crosshair', display: 'inline-block' }}
+                >O</span>VIND
+              </div>
               <div className="hari-secret-easter-egg">
-                 <div><span className="terminal-prompt">root@hari:~$</span> execute identity_scan</div>
-                 <div style={{marginTop: '10px'}}><span className="terminal-prompt">&gt;</span> FOCUS: PROBLEM SOLVING & PROJECT BUILDING</div>
-                 <div><span className="terminal-prompt">&gt;</span> PASSION: PHOTOGRAPHY</div>
-                 <div><span className="terminal-prompt">&gt;</span> INTERESTS: CINEMA & STORYTELLING</div>
-                 <div><span className="terminal-prompt">&gt;</span> STATUS: B.TECH UNDERGRADUATE</div>
+                 {isWayneMode ? (
+                   <>
+                     <div><span className="terminal-prompt" style={{color:'#ef4444'}}>root@wayne_ent:~$</span> execute override_protocol</div>
+                     <div style={{marginTop: '10px'}}><span className="terminal-prompt" style={{color:'#ef4444'}}>&gt;</span> TARGET ACQUIRED.</div>
+                     <div><span className="terminal-prompt" style={{color:'#ef4444'}}>&gt;</span> PROTOCOL: KNIGHTFALL IMMINENT.</div>
+                   </>
+                 ) : (
+                   <>
+                     <div><span className="terminal-prompt">root@hari:~$</span> execute identity_scan</div>
+                     <div style={{marginTop: '10px'}}><span className="terminal-prompt">&gt;</span> FOCUS: PROBLEM SOLVING & PROJECT BUILDING</div>
+                     <div><span className="terminal-prompt">&gt;</span> PASSION: PHOTOGRAPHY</div>
+                     <div><span className="terminal-prompt">&gt;</span> INTERESTS: CINEMA & STORYTELLING</div>
+                     <div><span className="terminal-prompt">&gt;</span> STATUS: B.TECH UNDERGRADUATE</div>
+                   </>
+                 )}
               </div>
               <div className="hari-middle-name">P NAIR</div>
             </div>
@@ -346,7 +439,7 @@ function App() {
               <span>SOLUTIONS</span>
             </div>
             <div className="hari-tagline">
-              Building at the intersection of<br/>raw optics and digital systems.
+              Building at the intersection of raw optics and digital systems.
             </div>
           </div>
         </div>
@@ -361,9 +454,99 @@ function App() {
     }
   };
 
+  const handleMainClick = (e) => {
+    if (!isWayneMode) return;
+    const newBat = { id: Date.now() + Math.random(), x: e.clientX, y: e.clientY };
+    setBatarangs(prev => [...prev, newBat]);
+    setTimeout(() => {
+      setBatarangs(prev => prev.filter(b => b.id !== newBat.id));
+    }, 1500);
+  };
+
   return (
-    <main className="bookshelf-container">
+    <main 
+       className={`bookshelf-container ${isWayneMode ? 'wayne-mode' : ''} ${showBatSignal ? 'spotlight-mode' : ''}`}
+       onClick={handleMainClick}
+    >
+      {showBatSignal && (
+        <svg className="bat-spotlight-svg">
+          <defs>
+             <filter id="soft-blur">
+               <feGaussianBlur stdDeviation="6" />
+             </filter>
+             <mask id="bat-hole">
+               <rect width="100%" height="100%" fill="white" />
+                <path 
+                  className="bat-spotlight-shape"
+                  d="M 50 15 L 53 5 L 56 15 C 75 10 95 5 100 0 C 95 20 90 35 75 40 C 65 35 55 50 50 60 C 45 50 35 35 25 40 C 10 35 5 20 0 0 C 5 5 25 10 44 15 L 47 5 Z" 
+                  fill="black" 
+                  filter="url(#soft-blur)"
+                />
+             </mask>
+          </defs>
+          <rect width="100%" height="100%" fill="rgba(0,0,0,0.98)" mask="url(#bat-hole)" />
+        </svg>
+      )}
+      {isWayneMode && <div className="crt-scanlines"></div>}
       <h1 className="sr-only">HARI - Photographer and Developer Portfolio</h1>
+      
+      {/* Fun Physics Layers */}
+      {batarangs.map(b => (
+        <div key={b.id} className="batarang-projectile" style={{ left: b.x, top: b.y }}>
+          <svg viewBox="0 0 100 50" width="80" height="40" fill="#18181b">
+             <path d="M50,30 L60,10 L90,15 L100,5 L70,35 L50,50 L30,35 L0,5 L10,15 L40,10 Z" />
+          </svg>
+        </div>
+      ))}
+
+      <div className={`afk-overlay ${isMouseIdle ? 'active' : ''}`}>
+         <svg className="afk-cowl-svg" viewBox="0 0 300 350">
+           <defs>
+             <filter id="evil-glow">
+               <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+               <feMerge>
+                 <feMergeNode in="coloredBlur"/>
+                 <feMergeNode in="SourceGraphic"/>
+               </feMerge>
+             </filter>
+           </defs>
+
+           {/* New "Classic/Intimidating" cowl silhouette — tall vertical ears */}
+           <path d="
+             M 50 10
+             L 65 140
+             C 85 100, 115 80, 150 80
+             C 185 80, 215 100, 235 140
+             L 250 10
+             L 265 160
+             C 275 190, 285 240, 255 290
+             C 235 320, 200 340, 180 345
+             L 150 310
+             L 120 345
+             C 100 340, 65 320, 45 290
+             C 15 240, 25 190, 35 160 Z
+           " fill="#000000" />
+
+           {/* Left eye — very sharp, angled intimidating slit */}
+           <path d="
+             M 80 175
+             L 140 195
+             L 135 210
+             L 85 200 Z
+           " fill="white" filter="url(#evil-glow)" className="afk-eye-left" />
+
+           {/* Right eye — mirrored and sharp */}
+           <path d="
+             M 220 175
+             L 160 195
+             L 165 210
+             L 215 200 Z
+           " fill="white" filter="url(#evil-glow)" className="afk-eye-right" />
+
+           {/* The Nose/Brow Notch */}
+           <path d="M 135 205 L 150 230 L 165 205" fill="#000000" />
+         </svg>
+      </div>
       
       <div className="accordion">
         {panels.map((panel, idx) => {
