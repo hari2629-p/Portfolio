@@ -253,7 +253,8 @@ h1.sr-only { display: none; } /* Managed by sr-only.css, fallback here */
 
 .photo-item img {
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
   display: block;
   transition: filter 0.8s var(--transition-ease), transform 0.8s var(--transition-ease);
   filter: grayscale(100%) brightness(0.75);
@@ -497,6 +498,46 @@ h1.sr-only { display: none; } /* Managed by sr-only.css, fallback here */
   scrollbar-width: none;  /* Firefox */
 }
 
+/* Skills Loading Bars */
+.skills-bar-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.skill-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.skill-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  color: #a1a1aa;
+}
+
+.skill-bar-bg {
+  width: 100%;
+  height: 4px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+@keyframes loadBar {
+  from { width: 0; }
+}
+
+.skill-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, rgba(255,255,255,0.2), #fff);
+  border-radius: 2px;
+  animation: loadBar 1.2s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+}
+
 .linkedin-timeline {
   display: flex;
   flex-direction: column;
@@ -662,7 +703,66 @@ h1.sr-only { display: none; } /* Managed by sr-only.css, fallback here */
   align-items: flex-start;
   padding: 80px;
   box-sizing: border-box;
+  position: relative;
+  perspective: 1200px;
+  overflow: hidden;
+  background-color: #030303;
+  /* Geometric Parallax Blueprint Grid */
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+  background-position: calc(var(--mouse-x, 0px) * -0.05) calc(var(--mouse-y, 0px) * -0.05);
+}
+
+.hari-identity-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: 
+    linear-gradient(90deg, transparent calc(var(--mouse-x, 50%) - 1px), rgba(255,255,255,0.08) var(--mouse-x, 50%), transparent calc(var(--mouse-x, 50%) + 1px)),
+    linear-gradient(0deg, transparent calc(var(--mouse-y, 50%) - 1px), rgba(255,255,255,0.08) var(--mouse-y, 50%), transparent calc(var(--mouse-y, 50%) + 1px));
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 1;
+}
+
+.hari-identity-panel::after {
+  content: "";
+  position: absolute;
+  top: var(--mouse-y, 50%);
+  left: var(--mouse-x, 50%);
+  width: 60px;
+  height: 60px;
+  border: 1px dashed rgba(255,255,255,0.5);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) rotate(calc(var(--tilt-y, 0deg) * 20));
+  background: radial-gradient(circle 3px at center, rgba(255,255,255,0.9) 100%, transparent 100%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 2;
+}
+
+.hari-identity-panel:hover::before,
+.hari-identity-panel:hover::after {
+  opacity: 1;
+}
+
+.hari-tilt-wrapper {
+  transform: rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+  transform-style: preserve-3d;
+  transition: transform 0.1s ease;
+  z-index: 2;
+  position: relative;
+  display: flex;
+  flex-direction: column;
   gap: 30px;
+}
+
+.hari-identity-panel:not(:hover) .hari-tilt-wrapper {
+  transition: transform 1s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
 .hari-name-block {
@@ -670,6 +770,8 @@ h1.sr-only { display: none; } /* Managed by sr-only.css, fallback here */
   flex-direction: column;
   gap: 0;
   line-height: 0.9;
+  transform: translateZ(40px);
+  cursor: crosshair;
 }
 
 .hari-first-name {
@@ -679,6 +781,7 @@ h1.sr-only { display: none; } /* Managed by sr-only.css, fallback here */
   -webkit-text-stroke: 2px rgba(255,255,255,0.9);
   letter-spacing: -2px;
   text-transform: uppercase;
+  transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
 .hari-middle-name {
@@ -688,6 +791,51 @@ h1.sr-only { display: none; } /* Managed by sr-only.css, fallback here */
   letter-spacing: -2px;
   text-transform: uppercase;
   -webkit-text-stroke: 1px rgba(255,255,255,0.2);
+  transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.hari-name-block:hover .hari-first-name {
+  -webkit-text-stroke: 1px rgba(255,255,255,0.3);
+  color: transparent;
+  transform: translateY(-90px) rotateX(35deg) translateZ(10px);
+  opacity: 0.15;
+}
+
+.hari-name-block:hover .hari-middle-name {
+  -webkit-text-stroke: 1px rgba(255,255,255,0.3);
+  color: transparent;
+  transform: translateY(90px) rotateX(-35deg) translateZ(10px);
+  opacity: 0.15;
+}
+
+.hari-secret-easter-egg {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%) translateZ(-30px) rotateX(-10deg);
+  width: 100%;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #4ade80;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+  text-transform: uppercase;
+  letter-spacing: 0px;
+  text-shadow: 0 0 15px rgba(74, 222, 128, 0.6);
+}
+
+.terminal-prompt {
+  color: #a1a1aa;
+  margin-right: 8px;
+  text-shadow: none;
+}
+
+.hari-name-block:hover .hari-secret-easter-egg {
+  opacity: 1;
+  letter-spacing: 2px;
+  transform: translateY(-50%) translateZ(60px) rotateX(0deg);
 }
 
 .hari-divider {
@@ -695,6 +843,13 @@ h1.sr-only { display: none; } /* Managed by sr-only.css, fallback here */
   height: 2px;
   background: linear-gradient(90deg, rgba(255,255,255,0.6), transparent);
   margin: 10px 0;
+  transform: translateZ(20px);
+  transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.hari-name-block:hover ~ .hari-divider {
+  width: 200px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.8), rgba(255,255,255,0.2), transparent);
 }
 
 .hari-meta {
@@ -706,6 +861,7 @@ h1.sr-only { display: none; } /* Managed by sr-only.css, fallback here */
   color: rgba(255,255,255,0.35);
   font-weight: 500;
   text-transform: uppercase;
+  transform: translateZ(10px);
 }
 
 .hari-dot {
@@ -721,4 +877,5 @@ h1.sr-only { display: none; } /* Managed by sr-only.css, fallback here */
   line-height: 1.7;
   font-style: italic;
   margin-top: 10px;
+  transform: translateZ(5px);
 }

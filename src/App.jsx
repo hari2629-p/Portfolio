@@ -63,8 +63,8 @@ function App() {
       totalDuration: '1 yr',
       letter: 'I',
       roles: [
-        { title: 'Secretary of IAS', date: 'Jun 2025 - Present · 11 mos', desc: 'Spearheading operations of the IEEE IAS Student Branch Chapter. Planning and executing technical events and industrial interaction programs.' },
-        { title: 'Media Manager', date: 'May 2025 - Present · 1 yr', desc: 'Driving the creative and digital media initiatives of the IEEE Student Branch. Publishing posters, reels, and promotional content.' }
+        { title: 'Secretary of IAS', date: 'May 2025 - April 2026 · 1 yr', desc: 'Spearheading operations of the IEEE IAS Student Branch Chapter. Planning and executing technical events and industrial interaction programs.' },
+        { title: 'Media Manager', date: 'May 2025 - April 2026 · 1 yr', desc: 'Driving the creative and digital media initiatives of the IEEE Student Branch. Publishing posters, reels, and promotional content.' }
       ]
     },
     {
@@ -78,6 +78,28 @@ function App() {
     }
   ];
 
+  const handleIdentityMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    e.currentTarget.style.setProperty('--mouse-x', `${x}px`);
+    e.currentTarget.style.setProperty('--mouse-y', `${y}px`);
+    
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const tiltX = ((y - centerY) / centerY) * -5;
+    const tiltY = ((x - centerX) / centerX) * 5;
+    
+    e.currentTarget.style.setProperty('--tilt-x', `${tiltX}deg`);
+    e.currentTarget.style.setProperty('--tilt-y', `${tiltY}deg`);
+  };
+
+  const handleIdentityMouseLeave = (e) => {
+    e.currentTarget.style.setProperty('--tilt-x', `0deg`);
+    e.currentTarget.style.setProperty('--tilt-y', `0deg`);
+  };
+
   const panels = [
     {
       id: 'photo',
@@ -89,7 +111,19 @@ function App() {
       content: (
         <div className="panel-inner scrollable-panel">
           <h2>PHOTOGRAPHY SHOWCASE</h2>
-          <p>My Prespectives .</p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginBottom: '10px' }}>
+            <p style={{ margin: 0, opacity: 0.8, fontSize: '18px' }}>Visual storytelling and raw perspective.</p>
+            <div className="project-tags">
+              <span className="tech-tag" style={{display: 'flex', alignItems: 'center', gap: '6px', border: '1px solid rgba(255,255,255,0.1)'}}>
+                 <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                 CANON EOS 1200D
+              </span>
+              <span className="tech-tag" style={{display: 'flex', alignItems: 'center', gap: '6px', border: '1px solid rgba(255,255,255,0.1)'}}>
+                 <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+                 POCO X5 PRO
+              </span>
+            </div>
+          </div>
           <div className="photography-grid">
              {/* Hero — Deity portrait full width */}
              <div className="photo-item wide">
@@ -200,10 +234,42 @@ function App() {
             <div className="about-column">
               <h4>THE BUILDER</h4>
               <p>I’ve worked on a mix of projects — from web apps to small systems — mainly using Python, SQL, and modern web tech. I enjoy figuring things out as I go and turning rough abstract ideas into something usable.</p>
+              <div className="skills-bar-container" style={{ marginTop: '25px' }}>
+                {[
+                  { name: 'PYTHON', level: '75%' },
+                  { name: 'HTML / CSS', level: '75%' },
+                  { name: 'FLASK & MYSQL', level: '65%' },
+                  { name: 'OPENCV & ARDUINO', level: '50%' },
+                  { name: 'REACT.JS', level: '35%' },
+                ].map(skill => (
+                  <div key={skill.name} className="skill-row">
+                    <div className="skill-label">{skill.name}</div>
+                    <div className="skill-bar-bg">
+                       <div className="skill-bar-fill" style={{ width: skill.level }}></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
             <div className="about-column">
               <h4>THE EXPLORER</h4>
               <p>I like exploring new ideas, experimenting with tech, and just getting better with every project I build. Always striving to balance solid architectural engineering with high aesthetic standards.</p>
+              <div className="skills-bar-container" style={{ marginTop: '25px' }}>
+                {[
+                  { name: 'PROBLEM SOLVING', level: '90%' },
+                  { name: 'PROJECT BUILDING', level: '85%' },
+                  { name: 'LEADERSHIP', level: '85%' },
+                  { name: 'DIGITAL DESIGN', level: '75%' },
+                  { name: 'STORYTELLING', level: '80%' },
+                ].map(skill => (
+                  <div key={skill.name} className="skill-row">
+                    <div className="skill-label">{skill.name}</div>
+                    <div className="skill-bar-bg">
+                       <div className="skill-bar-fill" style={{ width: skill.level }}></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
           
@@ -254,21 +320,34 @@ function App() {
       bg: '#000000',
       isName: true,
       content: (
-        <div className="hari-identity-panel">
-          <div className="hari-name-block">
-            <div className="hari-first-name">HARIGOVIND</div>
-            <div className="hari-middle-name">P NAIR</div>
-          </div>
-          <div className="hari-divider"></div>
-          <div className="hari-meta">
-            <span>PHOTOGRAPHER</span>
-            <span className="hari-dot">·</span>
-            <span>DEVELOPER</span>
-            <span className="hari-dot">·</span>
-            <span>KERALA, INDIA</span>
-          </div>
-          <div className="hari-tagline">
-            Building at the intersection of<br/>raw optics and digital systems.
+        <div 
+          className="hari-identity-panel"
+          onMouseMove={handleIdentityMouseMove}
+          onMouseLeave={handleIdentityMouseLeave}
+        >
+          <div className="hari-tilt-wrapper">
+            <div className="hari-name-block">
+              <div className="hari-first-name">HARIGOVIND</div>
+              <div className="hari-secret-easter-egg">
+                 <div><span className="terminal-prompt">root@hari:~$</span> execute identity_scan</div>
+                 <div style={{marginTop: '10px'}}><span className="terminal-prompt">&gt;</span> FOCUS: PROBLEM SOLVING & PROJECT BUILDING</div>
+                 <div><span className="terminal-prompt">&gt;</span> PASSION: PHOTOGRAPHY</div>
+                 <div><span className="terminal-prompt">&gt;</span> INTERESTS: CINEMA & STORYTELLING</div>
+                 <div><span className="terminal-prompt">&gt;</span> STATUS: B.TECH UNDERGRADUATE</div>
+              </div>
+              <div className="hari-middle-name">P NAIR</div>
+            </div>
+            <div className="hari-divider"></div>
+            <div className="hari-meta">
+              <span>PHOTOGRAPHY</span>
+              <span className="hari-dot">·</span>
+              <span>DEVELOPMENT</span>
+              <span className="hari-dot">·</span>
+              <span>SOLUTIONS</span>
+            </div>
+            <div className="hari-tagline">
+              Building at the intersection of<br/>raw optics and digital systems.
+            </div>
           </div>
         </div>
       )
