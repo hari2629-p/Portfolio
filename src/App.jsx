@@ -355,8 +355,10 @@ function App() {
   ];
 
   const handlePanelClick = (index) => {
-    // If clicking the active one, close it. Otherwise open the new one.
-    setActiveIndex(activeIndex === index ? null : index);
+    // Prevent the active panel from collapsing when tapped or scrolled on mobile
+    if (activeIndex !== index) {
+      setActiveIndex(index);
+    }
   };
 
   return (

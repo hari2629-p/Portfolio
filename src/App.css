@@ -879,3 +879,103 @@ h1.sr-only { display: none; } /* Managed by sr-only.css, fallback here */
   margin-top: 10px;
   transform: translateZ(5px);
 }
+
+/* ---- MOBILE RESPONSIVENESS ---- */
+@media screen and (max-width: 768px) {
+  .accordion {
+    flex-direction: column;
+    height: 100svh;
+  }
+  .accordion-panel {
+    border-right: none;
+    border-bottom: 1px solid rgba(0,0,0,0.2);
+  }
+  .accordion-panel.active {
+    border-bottom: none;
+  }
+  .accordion-panel:last-child {
+    border-bottom: none;
+  }
+  .panel-spine {
+    flex-direction: row;
+    gap: 15px;
+  }
+  .spine-title {
+    writing-mode: horizontal-tb;
+    transform: none;
+    margin-top: 0;
+    font-size: 14px;
+    letter-spacing: 4px;
+  }
+  .panel-icon {
+    width: 24px;
+    height: 24px;
+  }
+  .name-vertical {
+    writing-mode: horizontal-tb;
+    transform: none;
+    font-size: 24px !important;
+    letter-spacing: 2px !important;
+  }
+  
+  /* Inner content scaling */
+  .panel-inner {
+    padding: 30px 24px;
+  }
+  .photography-grid {
+    grid-template-columns: 1fr;
+  }
+  .photo-item.wide {
+    grid-column: span 1;
+  }
+  .photo-item {
+    height: 350px;
+  }
+  
+  .about-columns {
+    flex-direction: column;
+    gap: 30px;
+  }
+  .about-intro {
+    flex-direction: column;
+  }
+  .drop-cap {
+    font-size: 60px;
+    margin-bottom: 0px;
+    line-height: 1;
+  }
+  
+  /* Identity Panel mobile formatting */
+  .hari-identity-panel {
+    padding: 20px;
+    align-items: center;
+    text-align: center;
+  }
+  .hari-meta {
+    flex-direction: column;
+    gap: 5px;
+    font-size: 10px;
+  }
+  .hari-dot {
+    display: none;
+  }
+  .hari-divider {
+    margin: 15px auto;
+  }
+  .hari-name-block {
+    align-items: center;
+  }
+  .hari-name-block:hover .hari-secret-easter-egg {
+    font-size: 9px;
+    transform: translateY(-50%) translateZ(20px) rotateX(0deg);
+  }
+  .portfolio-footer {
+    display: none; /* Hide the fixed footer on mobile to maximize viewport */
+  }
+  
+  /* Disable mouse-tracking geometry on touch screens */
+  .hari-identity-panel::before,
+  .hari-identity-panel::after {
+    display: none !important;
+  }
+}
