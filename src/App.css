@@ -1,7 +1,8 @@
 :root {
   --transition-speed: 0.9s;
-  --transition-ease: cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smooth sine-like */
-  --transition-snap: cubic-bezier(0.19, 1, 0.22, 1); /* Snappy for interactions */
+  --transition-ease: cubic-bezier(0.19, 1, 0.22, 1); /* Unified Exponential Ease */
+  --transition-snap: cubic-bezier(0.19, 1, 0.22, 1);
+  --accent-red: #ef4444;
 }
 
 body {
@@ -47,21 +48,27 @@ h1.sr-only { display: none; } /* Managed by sr-only.css, fallback here */
   display: flex;
   justify-content: center;
   align-items: center;
+  opacity: 0; /* Ensures they stay hidden until the loader is ready */
   transition: 
     flex var(--transition-speed) var(--transition-ease),
     filter 0.5s var(--transition-ease),
-    box-shadow 0.5s ease;
+    box-shadow 0.5s var(--transition-ease);
   border-right: 1px solid rgba(0,0,0,0.2);
-  animation: panelIn 1.1s var(--transition-ease) both;
-  will-change: flex;
+  will-change: flex, filter, transform;
   transform: translateZ(0); /* Force GPU layer */
 }
-.accordion-panel:nth-child(1) { animation-delay: 0.0s; }
-.accordion-panel:nth-child(2) { animation-delay: 0.08s; }
-.accordion-panel:nth-child(3) { animation-delay: 0.16s; }
-.accordion-panel:nth-child(4) { animation-delay: 0.24s; }
-.accordion-panel:nth-child(5) { animation-delay: 0.32s; }
-.accordion-panel:nth-child(6) { animation-delay: 0.40s; }
+
+/* Trigger original entrance only when system is ready */
+.accordion.ready .accordion-panel {
+  animation: panelIn 1.1s var(--transition-ease) both;
+}
+
+.accordion.ready .accordion-panel:nth-child(1) { animation-delay: 0.0s; }
+.accordion.ready .accordion-panel:nth-child(2) { animation-delay: 0.08s; }
+.accordion.ready .accordion-panel:nth-child(3) { animation-delay: 0.16s; }
+.accordion.ready .accordion-panel:nth-child(4) { animation-delay: 0.24s; }
+.accordion.ready .accordion-panel:nth-child(5) { animation-delay: 0.32s; }
+.accordion.ready .accordion-panel:nth-child(6) { animation-delay: 0.40s; }
 
 .accordion-panel:last-child {
   border-right: none;
@@ -165,7 +172,8 @@ h1.sr-only { display: none; } /* Managed by sr-only.css, fallback here */
   -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.35);
   line-height: 1;
   animation: breathe 5s ease-in-out infinite;
-  transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+  transition: all 0.4s var(--transition-ease);
+  will-change: transform, -webkit-text-stroke;
 }
 
 .accordion-panel:hover .name-vertical {
@@ -1214,4 +1222,155 @@ h1.sr-only { display: none; } /* Managed by sr-only.css, fallback here */
   .hari-identity-panel::after {
     display: none !important;
   }
+}
+
+/* --- STRUCTURAL ALIGNMENT LOADER --- */
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  background-color: #030303;
+  z-index: 200000;
+  color: #fff;
+  transition: opacity 0.8s cubic-bezier(0.19, 1, 0.22, 1) 0.8s; /* Fade out after lines align */
+  overflow: hidden;
+  font-family: 'Inter', system-ui, sans-serif;
+  pointer-events: all;
+}
+
+.loading-screen.ready {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.loader-lines-container {
+  position: absolute;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+}
+
+.loader-line {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(to bottom, 
+    transparent, 
+    rgba(255,255,255,0.05) 5%, 
+    rgba(255,255,255,0.4) 45%, 
+    rgba(255,255,255,0.4) 55%, 
+    rgba(255,255,255,0.05) 95%, 
+    transparent
+  );
+  /* Silky smooth transition for the "Scan & Align" sweep */
+  transition: 
+    left 1.2s cubic-bezier(0.19, 1, 0.22, 1),
+    opacity 0.8s ease;
+  transform: translateX(-50%);
+  box-shadow: 0 0 15px rgba(255,255,255,0.05);
+}
+
+.loader-line-label {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%) rotate(90deg);
+  transform-origin: left center;
+  font-size: 10px;
+  letter-spacing: 5px;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+  font-family: monospace;
+  opacity: 0;
+  transition: opacity 0.5s ease 0.8s; /* Fade in after alignment starts */
+}
+
+/* Snap to target vertical positions when ready */
+.loading-screen.ready .loader-line-label { opacity: 0.2; }
+.loading-screen.ready .line-0 { left: 8.33%; }
+.loading-screen.ready .line-1 { left: 25%; }
+.loading-screen.ready .line-2 { left: 41.66%; }
+.loading-screen.ready .line-3 { left: 58.33%; }
+.loading-screen.ready .line-4 { left: 75%; }
+.loading-screen.ready .line-5 { left: 91.66%; }
+
+.loader-status-overlay {
+  position: absolute;
+  bottom: 80px;
+  left: 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 10;
+  transition: opacity 0.5s ease;
+}
+
+.loading-screen.ready .loader-status-overlay {
+  opacity: 0;
+}
+
+.loader-main-text {
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: 6px;
+  color: #fff;
+  text-transform: uppercase;
+}
+
+.loader-sub-text {
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: rgba(255,255,255,0.3);
+  font-style: italic;
+  font-weight: 300;
+}
+
+.loader-percentage-massive {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 45vh;
+  font-weight: 900;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255,255,255,0.03);
+  pointer-events: none;
+  z-index: -1;
+  transition: opacity 0.8s ease;
+}
+
+.loading-screen.ready .loader-percentage-massive {
+  opacity: 0;
+}
+
+/* Wayne Mode Variant */
+.wayne-mode .loading-screen { background-color: #050000; }
+.wayne-mode .loader-line {
+  background: linear-gradient(to bottom, 
+    transparent, 
+    rgba(239,68,68,0.05) 5%, 
+    #ef4444 45%, #ef4444 55%, 
+    rgba(239,68,68,0.05) 95%, 
+    transparent
+  );
+  box-shadow: 0 0 20px rgba(239,68,68,0.1);
+}
+.wayne-mode .loader-main-text { color: #ef4444; }
+.wayne-mode .loader-percentage-massive { -webkit-text-stroke: 1px rgba(239,68,68,0.02); }
+
+.portfolio-footer {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+}
+
+.afk-overlay {
+  will-change: opacity;
+  transform: translateZ(0);
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
 }

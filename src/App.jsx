@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './App.css';
 import './sr-only.css';
 
@@ -10,6 +10,12 @@ function App() {
   const [isMouseIdle, setIsMouseIdle] = useState(false);
   const [showBatSignal, setShowBatSignal] = useState(false);
   const [batarangs, setBatarangs] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadingProgress, setLoadingProgress] = useState(0);
+  const [isAppReady, setIsAppReady] = useState(false);
+
+  // Throttled Refs for performance
+  const targetPos = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
     console.log(`%c
@@ -37,8 +43,44 @@ function App() {
   }, []);
 
   useEffect(() => {
-    // Dynamic wait time: 15s for "Hari" page (null or index 5), 1 min for others
-    const waitTime = (activeIndex === null || activeIndex === 5) ? 15000 : 60000;
+    if (isLoading) {
+      const interval = setInterval(() => {
+        setLoadingProgress(prev => {
+          if (prev >= 100) {
+            clearInterval(interval);
+            return 100;
+          }
+          const increment = Math.random() * 25;
+          return Math.min(prev + increment, 100);
+        });
+      }, 120);
+      return () => clearInterval(interval);
+    }
+  }, [isLoading]);
+
+  // Handle the "Ready" transition sequence for a silky smooth exit
+  useEffect(() => {
+    if (loadingProgress === 100) {
+      // Step 1: Trigger the panel entrance animation (start widening/fading)
+      const readyTimer = setTimeout(() => {
+        setIsAppReady(true);
+      }, 300); // Small beat after hits 100 to let lines snap
+      
+      // Step 2: Unmount the loader once panels are fully expanded
+      const finishTimer = setTimeout(() => {
+        setIsLoading(false);
+      }, 1600); 
+      
+      return () => {
+        clearTimeout(readyTimer);
+        clearTimeout(finishTimer);
+      };
+    }
+  }, [loadingProgress]);
+
+  useEffect(() => {
+    // Increased wait times: 2 mins for main page, 5 mins for panels
+    const waitTime = (activeIndex === null || activeIndex === 5) ? 120000 : 300000;
     
     let timeout = setTimeout(() => setIsMouseIdle(true), waitTime);
     
@@ -50,9 +92,15 @@ function App() {
 
     const handleMouseMove = (e) => {
       handleGlobalInteraction();
-      // Update global coordinates for the interactive flashlight
-      document.documentElement.style.setProperty('--spotlight-x', `${e.clientX}px`);
-      document.documentElement.style.setProperty('--spotlight-y', `${e.clientY}px`);
+      targetPos.current = { x: e.clientX, y: e.clientY };
+    };
+
+    // Spotlight stays frame-locked for performance
+    let rafId;
+    const updateSpotlight = () => {
+      document.documentElement.style.setProperty('--spotlight-x', `${targetPos.current.x}px`);
+      document.documentElement.style.setProperty('--spotlight-y', `${targetPos.current.y}px`);
+      rafId = requestAnimationFrame(updateSpotlight);
     };
 
     window.addEventListener('mousemove', handleMouseMove);
@@ -60,14 +108,17 @@ function App() {
     window.addEventListener('keydown', handleGlobalInteraction);
     window.addEventListener('touchstart', handleGlobalInteraction);
     
+    rafId = requestAnimationFrame(updateSpotlight);
+    
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mousedown', handleGlobalInteraction);
       window.removeEventListener('keydown', handleGlobalInteraction);
       window.removeEventListener('touchstart', handleGlobalInteraction);
+      cancelAnimationFrame(rafId);
       clearTimeout(timeout);
     };
-  }, [activeIndex]); // Re-run when active page changes to update timer duration
+  }, [activeIndex]); // Only re-run when index changes, not on every mousemove
 
   const projectsData = [
     {
@@ -208,6 +259,13 @@ function App() {
              <div className="photo-item wide">
                <img src="/photography/587810428_17909316447275367_5561139947428540330_n.jpeg" alt="Stepwell Architecture" loading="lazy" />
              </div>
+             {/* New Gallery Additions */}
+             <div className="photo-item">
+               <img src="/photography/AQNiM9JutMcyiiq8z_0M0RQggjwqZOBVdKunQkIcjq5QbRb5s9sZK_yQgqyXo094ZKr0pcfrkV226yNwXLSP7e9-UCCXurur606bH2o_000.jpg" alt="Gallery Image 1" loading="lazy" />
+             </div>
+             <div className="photo-item">
+               <img src="/photography/AQPI8gb3KtE8lKhBD-ChOHTT3ifnFqAEhlLa9uLwD9BHCHrUQkGKRXGkhFA1LJXRG6wQdcVub0HjejWuQcNyp72deJtd-a_TdwkB9DM_000.jpg" alt="Gallery Image 2" loading="lazy" />
+             </div>
           </div>
         </div>
       )
@@ -303,7 +361,7 @@ function App() {
                   { name: 'PYTHON', level: '75%' },
                   { name: 'HTML / CSS', level: '75%' },
                   { name: 'FLASK & MYSQL', level: '65%' },
-                  { name: 'OPENCV & ARDUINO', level: '50%' },
+                  { name: 'ARDUINO & OTHER EMBEDDED SYSTEMS', level: '50%' },
                   { name: 'REACT.JS', level: '35%' },
                 ].map(skill => (
                   <div key={skill.name} className="skill-row">
@@ -468,6 +526,25 @@ function App() {
        className={`bookshelf-container ${isWayneMode ? 'wayne-mode' : ''} ${showBatSignal ? 'spotlight-mode' : ''}`}
        onClick={handleMainClick}
     >
+      {isLoading && (
+        <div className={`loading-screen ${loadingProgress === 100 ? 'ready' : ''}`}>
+          <div className="loader-lines-container">
+            {[...Array(6)].map((_, i) => (
+              <div 
+                key={i} 
+                className={`loader-line line-${i}`}
+                style={{ opacity: loadingProgress > (i * 12) ? 1 : 0 }}
+              />
+            ))}
+          </div>
+          
+          <div className="loader-status-overlay">
+            <div className="loader-percentage-massive">
+              {Math.round(loadingProgress)}
+            </div>
+          </div>
+        </div>
+      )}
       {showBatSignal && (
         <svg className="bat-spotlight-svg">
           <defs>
@@ -548,7 +625,7 @@ function App() {
          </svg>
       </div>
       
-      <div className="accordion">
+      <div className={`accordion ${isAppReady ? 'ready' : ''}`}>
         {panels.map((panel, idx) => {
           const isActive = activeIndex === idx;
           const isMuted = activeIndex !== null && !isActive;
