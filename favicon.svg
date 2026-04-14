@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+    <defs>
+        <!-- Sleek dark theme foundation -->
+        <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#18181b"/>
+            <stop offset="100%" stop-color="#000000"/>
+        </linearGradient>
+        <!-- Metallic silver for the monogram -->
+        <linearGradient id="textGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#ffffff"/>
+            <stop offset="100%" stop-color="#9ca3af"/>
+        </linearGradient>
+    </defs>
+    
+    <!-- Squircle container -->
+    <rect width="120" height="120" rx="28" fill="url(#bg)"/>
+    
+    <g fill="none" stroke="url(#textGrad)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+        <!-- Letter: H -->
+        <path d="M 16 40 L 16 80 M 30 40 L 30 80 M 16 60 L 30 60"/>
+        
+        <!-- Letter: G (Curved mathematically perfectly around the center dot) -->
+        <path d="M 76 48 A 20 20 0 1 0 76 72 A 20 20 0 0 0 80 60 L 66 60"/>
+        
+        <!-- Letter: P -->
+        <path d="M 90 40 L 90 80 M 90 40 Q 104 40 104 53 Q 104 66 90 66"/>
+    </g>
+
+    <!-- Minimalist 'Wayne-mode' / Camera Lens Accent Dot -->
+    <circle cx="60" cy="60" r="3.5" fill="#ef4444" />
+</svg>
