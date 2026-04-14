@@ -497,7 +497,7 @@ function App() {
               <span>SOLUTIONS</span>
             </div>
             <div className="hari-tagline">
-              Building at the intersection of raw optics and digital systems.
+             Perspectives, Perception, and Perseverance via Simplicity  
             </div>
           </div>
         </div>
