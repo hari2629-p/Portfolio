@@ -242,29 +242,29 @@ function App() {
           <div className="photography-grid">
              {/* Hero — Deity portrait full width */}
              <div className="photo-item wide">
-               <img src="/photography/655896053_17979668087822316_6446433767201010952_n.jpg" alt="Theyyam Deity Portrait" loading="lazy" />
+               <img src="photography/655896053_17979668087822316_6446433767201010952_n.jpg" alt="Theyyam Deity Portrait" loading="lazy" />
              </div>
              {/* Row — Train station + Temple statue */}
              <div className="photo-item">
-               <img src="/photography/619277848_17968717473005813_1029819978367863094_n.jpg" alt="Rainy Station Kannur" loading="lazy" />
+               <img src="photography/619277848_17968717473005813_1029819978367863094_n.jpg" alt="Rainy Station Kannur" loading="lazy" />
              </div>
              <div className="photo-item">
-               <img src="/photography/587934967_17913271764275367_330467023734711727_n.jpeg" alt="Temple Deity Statue" loading="lazy" />
+               <img src="photography/587934967_17913271764275367_330467023734711727_n.jpeg" alt="Temple Deity Statue" loading="lazy" />
              </div>
              {/* Hero — Bull race full width */}
              <div className="photo-item wide">
-               <img src="/photography/468666200_605712635306876_8415467578072215309_n.jpeg" alt="Maramadi Bull Race" loading="lazy" />
+               <img src="photography/468666200_605712635306876_8415467578072215309_n.jpeg" alt="Maramadi Bull Race" loading="lazy" />
              </div>
              {/* Bottom — Stepwell full width */}
              <div className="photo-item wide">
-               <img src="/photography/587810428_17909316447275367_5561139947428540330_n.jpeg" alt="Stepwell Architecture" loading="lazy" />
+               <img src="photography/587810428_17909316447275367_5561139947428540330_n.jpeg" alt="Stepwell Architecture" loading="lazy" />
              </div>
              {/* New Gallery Additions */}
              <div className="photo-item">
-               <img src="/photography/AQNiM9JutMcyiiq8z_0M0RQggjwqZOBVdKunQkIcjq5QbRb5s9sZK_yQgqyXo094ZKr0pcfrkV226yNwXLSP7e9-UCCXurur606bH2o_000.jpg" alt="Gallery Image 1" loading="lazy" />
+               <img src="photography/AQNiM9JutMcyiiq8z_0M0RQggjwqZOBVdKunQkIcjq5QbRb5s9sZK_yQgqyXo094ZKr0pcfrkV226yNwXLSP7e9-UCCXurur606bH2o_000.jpg" alt="Gallery Image 1" loading="lazy" />
              </div>
              <div className="photo-item">
-               <img src="/photography/AQPI8gb3KtE8lKhBD-ChOHTT3ifnFqAEhlLa9uLwD9BHCHrUQkGKRXGkhFA1LJXRG6wQdcVub0HjejWuQcNyp72deJtd-a_TdwkB9DM_000.jpg" alt="Gallery Image 2" loading="lazy" />
+               <img src="photography/AQPI8gb3KtE8lKhBD-ChOHTT3ifnFqAEhlLa9uLwD9BHCHrUQkGKRXGkhFA1LJXRG6wQdcVub0HjejWuQcNyp72deJtd-a_TdwkB9DM_000.jpg" alt="Gallery Image 2" loading="lazy" />
              </div>
           </div>
         </div>
