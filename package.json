@@ -1,9 +1,9 @@
 {
-  "name": "uiui",
+  "name": "Portfolio",
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://hari2629-p.github.io/uiui",
+  "homepage": "https://hari2629-p.github.io/Portfolio",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
